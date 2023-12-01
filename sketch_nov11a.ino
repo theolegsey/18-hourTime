@@ -1,11 +1,11 @@
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
 
-const int gpsRxPin = 4; // GPS TX to Arduino RX
-const int gpsTxPin = 2; // GPS RX to Arduino TX
-const int gpsPpsPin = 5; // Pulse Per Second pin
-const int gpsEnPin = 6; // Enable pin
-const int ledPin = 7;   // LED pin to indicate GPS fix status
+const int gpsRxPin = 2; // GPS TX to Arduino RX
+const int gpsTxPin = 3; // GPS RX to Arduino TX
+const int gpsPpsPin = 4; // Pulse Per Second pin
+const int gpsEnPin = 5; // Enable pin
+const int ledPin = 6;   // LED pin to indicate GPS fix status
 
 TinyGPSPlus gps;
 SoftwareSerial ssGPS(gpsRxPin, gpsTxPin);
@@ -42,10 +42,23 @@ void loop() {
 void displayGPSInfo() {
   // Display time, latitude, longitude, and altitude
   if (gps.time.isValid()) {
-    Serial.print("Time: ");
-    Serial.print(gps.time.hour()+2);
+    Serial.print("Time (UTC): ");
+    Serial.print(gps.time.hour());
+    Serial.print(":");
     printDigits(gps.time.minute());
+    Serial.print(":");
     printDigits(gps.time.second());
+    
+    // Add 2 hours to the displayed time
+    int adjustedHour = (gps.time.hour() + 2) % 24;
+    Serial.print(" (Adjusted: ");
+    Serial.print(adjustedHour);
+    Serial.print(":");
+    printDigits(gps.time.minute());
+    Serial.print(":");
+    printDigits(gps.time.second());
+    Serial.print(")");
+    
     Serial.println();
   }
   
