@@ -6,7 +6,7 @@ const int gpsTxPin = 3; // GPS RX to Arduino TX
 const int gpsPpsPin = 4; // Pulse Per Second pin
 const int gpsEnPin = 5; // Enable pin
 const int ledPin = 6;   // LED pin to indicate GPS fix status
-
+double h1, m1;          //transformed time to 18-hour format
 TinyGPSPlus gps;
 SoftwareSerial ssGPS(gpsRxPin, gpsTxPin);
 
@@ -38,28 +38,29 @@ void loop() {
     digitalWrite(ledPin, LOW); // Turn off the LED if no GPS fix
   }
 }
-
+void transfotm18(int hours, int minutes, int seconds, double hour18, double minute18){
+  int commonT;
+  double time18[2];
+  hours*=3600;          //hours to seconds
+  minutes*=60;          //minutes to seconds
+  commonT=(hours+minutes+seconds)*0,135; //multiply 5,4*5,4*1,5 & divide on 324
+  hour18=commonT/324;
+  minute18=(commonT % 324)*324;
+  }
 void displayGPSInfo() {
   // Display time, latitude, longitude, and altitude
   if (gps.time.isValid()) {
-    Serial.print("Time (UTC): ");
-    Serial.print(gps.time.hour());
-    Serial.print(":");
-    printDigits(gps.time.minute());
-    Serial.print(":");
-    printDigits(gps.time.second());
-    
-    // Add 2 hours to the displayed time
-    int adjustedHour = (gps.time.hour() + 2) % 24;
-    Serial.print(" (Adjusted: ");
+    int adjustedHour = (gps.time.hour() + 2) %24;
     Serial.print(adjustedHour);
     Serial.print(":");
     printDigits(gps.time.minute());
     Serial.print(":");
-    printDigits(gps.time.second());
-    Serial.print(")");
-    
+    printDigits(gps.time.second()); 
     Serial.println();
+    transfotm18(gps.time.hour(), gps.time.minute(),gps.time.second(), h1, m1);
+    Serial.print(h1);
+    Serial.print(":");
+    Serial.println(m1);
   }
   
   Serial.print("Latitude: ");
@@ -70,17 +71,6 @@ void displayGPSInfo() {
   
   Serial.print("Altitude (meters): ");
   Serial.println(gps.altitude.meters());
-
-  // Display additional information if available
-  if (gps.speed.isValid()) {
-    Serial.print("Speed (km/h): ");
-    Serial.println(gps.speed.kmph());
-  }
-  
-  if (gps.course.isValid()) {
-    Serial.print("Course (degrees): ");
-    Serial.println(gps.course.deg());
-  }
 
   if (gps.satellites.isValid()) {
     Serial.print("Number of satellites: ");
