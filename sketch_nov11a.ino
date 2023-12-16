@@ -38,9 +38,8 @@ void loop() {
     digitalWrite(ledPin, LOW); // Turn off the LED if no GPS fix
   }
 }
-void transfotm18(int hours, int minutes, int seconds, double hour18, double minute18){
+void transfotm18(int hours, int minutes, int seconds, float hour18, float minute18){
   int commonT;
-  double time18[2];
   hours*=3600;          //hours to seconds
   minutes*=60;          //minutes to seconds
   commonT=(hours+minutes+seconds)*0,135; //multiply 5,4*5,4*1,5 & divide on 324
@@ -80,7 +79,17 @@ void displayGPSInfo() {
   // Print a blank line to separate data sets
   Serial.println();
 }
-
+void addZeros(int minutes){
+  String updatedZeros;
+  String stringMin = String(minutes, DEC);
+ if(minutes<10){
+  updatedZeros = "00"+ stringMin;
+  }
+ if(minutes<100&minutes>10){
+  updatedZeros = "0"+ stringMin;
+  }
+  return updatedZeros;
+  }
 void printDigits(int digits) {
   if (digits < 10) {
     Serial.print('0');
