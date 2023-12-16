@@ -43,8 +43,8 @@ void transfotm18(int hours, int minutes, int seconds, float hour18, float minute
   hours*=3600;          //hours to seconds
   minutes*=60;          //minutes to seconds
   commonT=(hours+minutes+seconds)*0,135; //multiply 5,4*5,4*1,5 & divide on 324
-  hour18=commonT/324;
-  minute18=(commonT % 324)*324;
+  hour18=commonT/324;                    //full part hours
+  minute18=(commonT % 324)*324;          //reminder*324 -minutes
   }
 void displayGPSInfo() {
   // Display time, latitude, longitude, and altitude
