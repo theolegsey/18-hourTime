@@ -54,15 +54,13 @@ long tH(int hours, int minutes, int seconds){
   H = hours*3600+65536;
   H = H+minutes*60;
   H =H+seconds;
-  //H = H *0.135;
-  
   result = H*fV;
-  return result/104976;
+  return result/(324*324);
   }
 long tM(int hours, int minutes, int seconds){
   long H2;
   int H1;
-  float fV = 43.74;
+  float fV = 43.74; // (36/24*324/60*324*60)
   double result;
   H2 = hours*3600+65536;
   H2 = H2+minutes*60;
